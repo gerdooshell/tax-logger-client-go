@@ -7,7 +7,12 @@ import (
 )
 
 func SetUpLogger(url, serviceName, APIKey string) error {
-	return internal.SetLoggerConfig(internal.LoggerConfig{Url: url, RegisteredServiceName: serviceName, APIKey: APIKey})
+	config := internal.LoggerConfig{Url: url, RegisteredServiceName: serviceName, APIKey: APIKey}
+	if err := internal.SetLoggerConfig(config); err != nil {
+		return err
+	}
+	_, err := internal.GetClientLoggerInstance()
+	return err
 }
 
 func Destruct() error {
