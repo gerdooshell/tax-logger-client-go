@@ -2,6 +2,7 @@ package logger
 
 import (
 	"context"
+	"fmt"
 	loggerServer "github.com/gerdooshell/tax-communication/src/logger"
 	"github.com/gerdooshell/tax-logger-client-go/internal"
 	"github.com/gerdooshell/tax-logger-client-go/internal/environment"
@@ -34,8 +35,10 @@ func ErrorWithOptions(ctx context.Context, message, stackTrace, processId string
 	})
 }
 
-func Error(ctx context.Context, message string) error {
-	return ErrorWithOptions(ctx, message, "", "")
+func Error(message string) {
+	if err := ErrorWithOptions(context.Background(), message, "", ""); err != nil {
+		fmt.Println(err)
+	}
 }
 
 func WarningWithOptions(ctx context.Context, message, stackTrace, processId string) error {
@@ -49,8 +52,10 @@ func WarningWithOptions(ctx context.Context, message, stackTrace, processId stri
 	})
 }
 
-func Warning(ctx context.Context, message string) error {
-	return WarningWithOptions(ctx, message, "", "")
+func Warning(message string) {
+	if err := WarningWithOptions(context.Background(), message, "", ""); err != nil {
+		fmt.Println(err)
+	}
 }
 
 func InfoWithOptions(ctx context.Context, message, stackTrace, processId string) error {
@@ -64,8 +69,10 @@ func InfoWithOptions(ctx context.Context, message, stackTrace, processId string)
 	})
 }
 
-func Info(ctx context.Context, message string) error {
-	return InfoWithOptions(ctx, message, "", "")
+func Info(message string) {
+	if err := InfoWithOptions(context.Background(), message, "", ""); err != nil {
+		fmt.Println(err)
+	}
 }
 
 func FatalWithOptions(ctx context.Context, message, stackTrace, processId string) error {
@@ -79,8 +86,10 @@ func FatalWithOptions(ctx context.Context, message, stackTrace, processId string
 	})
 }
 
-func Fatal(ctx context.Context, message string) error {
-	return FatalWithOptions(ctx, message, "", "")
+func Fatal(message string) {
+	if err := FatalWithOptions(context.Background(), message, "", ""); err != nil {
+		fmt.Println(err)
+	}
 }
 
 func DebugWithOptions(ctx context.Context, message, stackTrace, processId string) error {
@@ -94,6 +103,8 @@ func DebugWithOptions(ctx context.Context, message, stackTrace, processId string
 	})
 }
 
-func Debug(ctx context.Context, message string) error {
-	return DebugWithOptions(ctx, message, "", "")
+func Debug(message string) {
+	if err := DebugWithOptions(context.Background(), message, "", ""); err != nil {
+		fmt.Println(err)
+	}
 }
