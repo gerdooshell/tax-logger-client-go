@@ -4,14 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"sync"
-	"time"
-
 	loggerServer "github.com/gerdooshell/tax-communication/src/logger"
-
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/types/known/timestamppb"
+	"sync"
+	"time"
 )
 
 type LoggerClient struct {
@@ -64,12 +62,13 @@ func Disconnect() error {
 	return singletonConnection.Close()
 }
 
-func (lc *LoggerClient) Log(ctx context.Context, severity Severity, message string, originLog *loggerServer.SaveOriginLogRequest) error {
+func (lc *LoggerClient) Log(ctx context.Context, severity Severity, message string, originLog *loggerServer.SaveOriginLogReq) error {
 	if err := lc.generateDataServiceClient(); err != nil {
 		return err
 	}
 	originLog.ServiceName = lc.config.RegisteredServiceName
-	input := &loggerServer.SaveServiceLogRequest{
+	fmt.Println(lc.config.APIKey)
+	input := &loggerServer.SaveServiceLogReq{
 		APIKey:    lc.config.APIKey,
 		Timestamp: timestamppb.New(time.Now()),
 		Severity:  string(severity),

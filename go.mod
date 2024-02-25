@@ -3,9 +3,8 @@ module github.com/gerdooshell/tax-logger-client-go
 go 1.21.6
 
 require (
-	github.com/gerdooshell/tax-communication/src/logger v0.0.0-20240225051503-d1a8eb9ff31a
+	github.com/gerdooshell/tax-communication/src/logger v0.0.0-20240225061414-a17e5cb6a473
 	google.golang.org/grpc v1.62.0
-	google.golang.org/protobuf v1.32.0
 )
 
 require (
@@ -14,4 +13,5 @@ require (
 	golang.org/x/sys v0.17.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240221002015-b0ce06bbee7c // indirect
+	google.golang.org/protobuf v1.32.0 // indirect
 )

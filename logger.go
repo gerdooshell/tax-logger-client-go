@@ -24,7 +24,7 @@ func ErrorWithOptions(ctx context.Context, message, stackTrace, processId string
 	if err != nil {
 		return err
 	}
-	return client.Log(ctx, internal.Error, message, &loggerServer.SaveOriginLogRequest{
+	return client.Log(ctx, internal.Error, message, &loggerServer.SaveOriginLogReq{
 		StackTrace: stackTrace,
 		ProcessId:  processId,
 	})
@@ -39,7 +39,7 @@ func WarningWithOptions(ctx context.Context, message, stackTrace, processId stri
 	if err != nil {
 		return err
 	}
-	return client.Log(ctx, internal.Warning, message, &loggerServer.SaveOriginLogRequest{
+	return client.Log(ctx, internal.Warning, message, &loggerServer.SaveOriginLogReq{
 		StackTrace: stackTrace,
 		ProcessId:  processId,
 	})
@@ -54,7 +54,7 @@ func InfoWithOptions(ctx context.Context, message, stackTrace, processId string)
 	if err != nil {
 		return err
 	}
-	return client.Log(ctx, internal.Info, message, &loggerServer.SaveOriginLogRequest{
+	return client.Log(ctx, internal.Info, message, &loggerServer.SaveOriginLogReq{
 		StackTrace: stackTrace,
 		ProcessId:  processId,
 	})
@@ -69,7 +69,7 @@ func FatalWithOptions(ctx context.Context, message, stackTrace, processId string
 	if err != nil {
 		return err
 	}
-	return client.Log(ctx, internal.Fatal, message, &loggerServer.SaveOriginLogRequest{
+	return client.Log(ctx, internal.Fatal, message, &loggerServer.SaveOriginLogReq{
 		StackTrace: stackTrace,
 		ProcessId:  processId,
 	})
@@ -84,7 +84,7 @@ func DebugWithOptions(ctx context.Context, message, stackTrace, processId string
 	if err != nil {
 		return err
 	}
-	return client.Log(ctx, internal.Debug, message, &loggerServer.SaveOriginLogRequest{
+	return client.Log(ctx, internal.Debug, message, &loggerServer.SaveOriginLogReq{
 		StackTrace: stackTrace,
 		ProcessId:  processId,
 	})
