@@ -3,7 +3,7 @@ module github.com/gerdooshell/tax-logger-client-go
 go 1.21.6
 
 require (
-	github.com/gerdooshell/tax-communication/src/logger v0.0.0-20240225025701-c6d95bfffd35
+	github.com/gerdooshell/tax-communication/src/logger v0.0.0-20240225051503-d1a8eb9ff31a
 	google.golang.org/grpc v1.62.0
 	google.golang.org/protobuf v1.32.0
 )

@@ -5,6 +5,7 @@ import "errors"
 type LoggerConfig struct {
 	Url                   string
 	RegisteredServiceName string
+	APIKey                string
 }
 
 var loggerConfig *LoggerConfig

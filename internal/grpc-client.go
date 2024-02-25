@@ -15,9 +15,8 @@ import (
 )
 
 type LoggerClient struct {
-	grpcClient  loggerServer.GRPCLoggerClient
-	serverURL   string
-	serviceName string
+	grpcClient loggerServer.GRPCLoggerClient
+	config     LoggerConfig
 }
 
 var loggerClientInstance *LoggerClient
@@ -31,8 +30,7 @@ func GetClientLoggerInstance() (*LoggerClient, error) {
 		return nil, err
 	}
 	loggerClientInstance = &LoggerClient{
-		serverURL:   config.Url,
-		serviceName: config.RegisteredServiceName,
+		config: config,
 	}
 	return loggerClientInstance, nil
 }
@@ -46,7 +44,7 @@ func (lc *LoggerClient) generateDataServiceClient() error {
 	if lc.grpcClient != nil {
 		return nil
 	}
-	connection, err := grpc.Dial(lc.serverURL, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	connection, err := grpc.Dial(lc.config.Url, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		err = fmt.Errorf("connection failed to the logger server")
 	}
@@ -69,8 +67,9 @@ func (lc *LoggerClient) Log(ctx context.Context, severity Severity, message stri
 	if err := lc.generateDataServiceClient(); err != nil {
 		return err
 	}
-	originLog.ServiceName = lc.serviceName
+	originLog.ServiceName = lc.config.RegisteredServiceName
 	input := &loggerServer.SaveServiceLogRequest{
+		APIKey:    lc.config.APIKey,
 		Timestamp: timestamppb.New(time.Now()),
 		Severity:  string(severity),
 		Message:   message,
