@@ -6,12 +6,15 @@ import (
 	"github.com/gerdooshell/tax-logger-client-go/internal"
 )
 
-func SetUpLogger(url, serviceName, APIKey string) error {
-	config := internal.LoggerConfig{Url: url, RegisteredServiceName: serviceName, APIKey: APIKey}
-	if err := internal.SetLoggerConfig(config); err != nil {
+func SetUpLogger(ctx context.Context, envStr, configFileAbsPath string) (err error) {
+	env, err := internal.GetEnvironmentFromString(envStr)
+	if err != nil {
 		return err
 	}
-	_, err := internal.GetClientLoggerInstance()
+	if err = internal.ConfigureLoggerByFilePath(ctx, env, configFileAbsPath); err != nil {
+		return err
+	}
+	_, err = internal.GetClientLoggerInstance()
 	return err
 }
 
