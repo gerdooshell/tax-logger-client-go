@@ -6,8 +6,8 @@ import (
 	"github.com/gerdooshell/tax-logger-client-go/internal"
 )
 
-func SetUpLogger(url string) error {
-	return internal.SetLoggerConfig(internal.LoggerConfig{Url: url, RegisteredServiceName: "mock"})
+func SetUpLogger(url, serviceName, APIKey string) error {
+	return internal.SetLoggerConfig(internal.LoggerConfig{Url: url, RegisteredServiceName: serviceName, APIKey: APIKey})
 }
 
 func Destruct() error {
