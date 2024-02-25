@@ -32,7 +32,8 @@ func GetClientLoggerInstance() (*LoggerClient, error) {
 	loggerClientInstance = &LoggerClient{
 		config: config,
 	}
-	return loggerClientInstance, nil
+	err = loggerClientInstance.generateDataServiceClient()
+	return loggerClientInstance, err
 }
 
 var singletonConnection *grpc.ClientConn
