@@ -4,10 +4,11 @@ import (
 	"context"
 	loggerServer "github.com/gerdooshell/tax-communication/src/logger"
 	"github.com/gerdooshell/tax-logger-client-go/internal"
+	"github.com/gerdooshell/tax-logger-client-go/internal/environment"
 )
 
 func SetUpLogger(ctx context.Context, envStr, configFileAbsPath string) (err error) {
-	env, err := internal.GetEnvironmentFromString(envStr)
+	env, err := environment.GetEnvironmentFromString(envStr)
 	if err != nil {
 		return err
 	}

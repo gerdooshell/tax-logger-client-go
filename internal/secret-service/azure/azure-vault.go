@@ -3,7 +3,7 @@ package azure
 import (
 	"context"
 	"fmt"
-	"github.com/gerdooshell/tax-logger-client-go/internal"
+	"github.com/gerdooshell/tax-logger-client-go/internal/environment"
 	"sync"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
@@ -17,7 +17,7 @@ import (
 var secretServiceCache = lrucache.NewLRUCache[string](20)
 var secretServiceMu sync.Mutex
 
-func NewSecretService(uri string, environment internal.Environment) secretService.SecretService {
+func NewSecretService(uri string, environment environment.Environment) secretService.SecretService {
 	secretServiceMu.Lock()
 	defer secretServiceMu.Unlock()
 	service, err := secretServiceCache.Read(uri)
@@ -35,14 +35,14 @@ func NewSecretService(uri string, environment internal.Environment) secretServic
 
 type azureSecretService struct {
 	uri         string
-	environment internal.Environment
+	environment environment.Environment
 	client      *azsecrets.Client
 	cache       lrucache.LRUCache[string]
 }
 
 func (az *azureSecretService) connectToVault() (err error) {
 	var cred azcore.TokenCredential
-	if az.environment == internal.Dev {
+	if az.environment == environment.Dev {
 		cred, err = azidentity.NewDefaultAzureCredential(nil)
 	} else {
 		cred, err = azidentity.NewManagedIdentityCredential(nil)

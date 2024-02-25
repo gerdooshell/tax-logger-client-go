@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gerdooshell/tax-logger-client-go/internal/environment"
 	"github.com/gerdooshell/tax-logger-client-go/internal/secret-service/azure"
 )
 
@@ -46,7 +47,7 @@ type loggerConfigModel struct {
 
 var isLoggerConfigured = false
 
-func ConfigureLoggerByFilePath(ctx context.Context, env Environment, absFilePath string) error {
+func ConfigureLoggerByFilePath(ctx context.Context, env environment.Environment, absFilePath string) error {
 	if isLoggerConfigured {
 		return errors.New("logger is already configured")
 	}
@@ -65,12 +66,12 @@ func ConfigureLoggerByFilePath(ctx context.Context, env Environment, absFilePath
 	return nil
 }
 
-func getLoggerConfigModel(ctx context.Context, absFilePath string, env Environment) (*loggerConfigModel, error) {
+func getLoggerConfigModel(ctx context.Context, absFilePath string, env environment.Environment) (*loggerConfigModel, error) {
 	data, err := os.ReadFile(absFilePath)
 	if err != nil {
 		return nil, err
 	}
-	var confMap map[Environment]loggerConfigModel
+	var confMap map[environment.Environment]loggerConfigModel
 	if err = json.Unmarshal(data, &confMap); err != nil {
 		return nil, err
 	}
@@ -90,7 +91,7 @@ func getLoggerConfigModel(ctx context.Context, absFilePath string, env Environme
 	return &conf, nil
 }
 
-func setVaultSecrets(ctx context.Context, conf loggerConfigModel, env Environment) (loggerConfigModel, error) {
+func setVaultSecrets(ctx context.Context, conf loggerConfigModel, env environment.Environment) (loggerConfigModel, error) {
 	timeout := time.Second * 5
 	azVault := azure.NewSecretService(conf.VaultURL, env)
 	LoggerUrl, errLoggerUrl := azVault.GetSecretValue(ctx, conf.LoggerUrl)
