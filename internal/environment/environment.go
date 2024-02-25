@@ -23,6 +23,6 @@ func GetEnvironmentFromString(envStr string) (env Environment, err error) {
 }
 
 const (
-	Dev  Environment = "dev"
-	Prod Environment = "prod"
+	Dev  Environment = "Dev"
+	Prod Environment = "Prod"
 )
