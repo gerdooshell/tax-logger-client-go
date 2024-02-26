@@ -1,1 +1,4 @@
-# tax-logger-client-go
+# Logger
+
+Run `go get -u `
+Run `go mod tidy`
