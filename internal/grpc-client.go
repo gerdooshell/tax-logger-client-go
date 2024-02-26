@@ -67,7 +67,6 @@ func (lc *LoggerClient) Log(ctx context.Context, severity Severity, message stri
 		return err
 	}
 	originLog.ServiceName = lc.config.RegisteredServiceName
-	fmt.Println(lc.config.APIKey)
 	input := &loggerServer.SaveServiceLogReq{
 		APIKey:    lc.config.APIKey,
 		Timestamp: timestamppb.New(time.Now()),

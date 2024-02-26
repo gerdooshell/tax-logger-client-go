@@ -35,6 +35,10 @@ func ErrorWithOptions(ctx context.Context, message, stackTrace, processId string
 	})
 }
 
+func ErrorFormat(format string, a ...any) {
+	Error(fmt.Sprintf(format, a))
+}
+
 func Error(message string) {
 	if err := ErrorWithOptions(context.Background(), message, "", ""); err != nil {
 		fmt.Println(err)
@@ -50,6 +54,10 @@ func WarningWithOptions(ctx context.Context, message, stackTrace, processId stri
 		StackTrace: stackTrace,
 		ProcessId:  processId,
 	})
+}
+
+func WarningFormat(format string, a ...any) {
+	Warning(fmt.Sprintf(format, a))
 }
 
 func Warning(message string) {
@@ -69,6 +77,10 @@ func InfoWithOptions(ctx context.Context, message, stackTrace, processId string)
 	})
 }
 
+func InfoFormat(format string, a ...any) {
+	Info(fmt.Sprintf(format, a))
+}
+
 func Info(message string) {
 	if err := InfoWithOptions(context.Background(), message, "", ""); err != nil {
 		fmt.Println(err)
@@ -86,6 +98,10 @@ func FatalWithOptions(ctx context.Context, message, stackTrace, processId string
 	})
 }
 
+func FatalFormat(format string, a ...any) {
+	Fatal(fmt.Sprintf(format, a))
+}
+
 func Fatal(message string) {
 	if err := FatalWithOptions(context.Background(), message, "", ""); err != nil {
 		fmt.Println(err)
@@ -101,6 +117,10 @@ func DebugWithOptions(ctx context.Context, message, stackTrace, processId string
 		StackTrace: stackTrace,
 		ProcessId:  processId,
 	})
+}
+
+func DebugFormat(format string, a ...any) {
+	Debug(fmt.Sprintf(format, a))
 }
 
 func Debug(message string) {
