@@ -103,28 +103,28 @@ func setVaultSecrets(ctx context.Context, conf loggerConfigModel, env environmen
 	case err := <-errLoggerUrl:
 		return conf, err
 	case <-time.After(timeout):
-		return conf, fmt.Errorf("fetching logger url secret timed out")
+		return conf, errors.New("fetching logger url secret timed out")
 	}
 	select {
 	case conf.APIKey = <-APIKey:
 	case err := <-errAPIKey:
 		return conf, err
 	case <-time.After(timeout):
-		return conf, fmt.Errorf("fetching logger api key timed out")
+		return conf, errors.New("fetching logger api key timed out")
 	}
 	select {
 	case conf.ServiceName = <-ServiceName:
 	case err := <-errServiceName:
 		return conf, err
 	case <-time.After(timeout):
-		return conf, fmt.Errorf("fetching logger service name timed out")
+		return conf, errors.New("fetching logger service name timed out")
 	}
 	select {
 	case conf.Port = <-port:
 	case err := <-errPort:
 		return conf, err
 	case <-time.After(timeout):
-		return conf, fmt.Errorf("fetching logger port secret timed out")
+		return conf, errors.New("fetching logger port secret timed out")
 	}
 	return conf, nil
 }
