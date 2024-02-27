@@ -72,8 +72,9 @@ func (az *azureSecretService) GetSecretValue(ctx context.Context, secretKey stri
 			out <- cachedValue.(string)
 			return
 		}
-		if err := az.connectToVault(); err != nil {
+		if err = az.connectToVault(); err != nil {
 			errChan <- err
+			return
 		}
 		version := ""
 		resp, err := az.client.GetSecret(ctx, secretKey, version, nil)
@@ -84,6 +85,7 @@ func (az *azureSecretService) GetSecretValue(ctx context.Context, secretKey stri
 		value := resp.Value
 		if value == nil {
 			errChan <- fmt.Errorf("secret key not found")
+			return
 		}
 		az.cache.Add(secretKey, *value)
 		out <- *value

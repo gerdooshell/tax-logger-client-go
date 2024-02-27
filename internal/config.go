@@ -92,7 +92,7 @@ func getLoggerConfigModel(ctx context.Context, absFilePath string, env environme
 }
 
 func setVaultSecrets(ctx context.Context, conf loggerConfigModel, env environment.Environment) (loggerConfigModel, error) {
-	timeout := time.Second * 5
+	timeout := time.Second * 15
 	azVault := azure.NewSecretService(conf.VaultURL, env)
 	LoggerUrl, errLoggerUrl := azVault.GetSecretValue(ctx, conf.LoggerUrl)
 	APIKey, errAPIKey := azVault.GetSecretValue(ctx, conf.APIKey)
