@@ -16,7 +16,9 @@ func SetUpLogger(ctx context.Context, envStr, configFileAbsPath string) (err err
 	if err = internal.ConfigureLoggerByFilePath(ctx, env, configFileAbsPath); err != nil {
 		return err
 	}
-	_, err = internal.GetClientLoggerInstance()
+	if _, err = internal.GetClientLoggerInstance(); err != nil {
+		err = fmt.Errorf("failed establishing connection to the logging service: %v", err)
+	}
 	if err == nil {
 		fmt.Println("logger is initialized and the logging service is responding")
 	}
