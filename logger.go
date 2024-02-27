@@ -42,6 +42,13 @@ func ErrorFormat(format string, a ...any) {
 	Error(fmt.Sprintf(format, a...))
 }
 
+func ErrorSafe(err error) {
+	if err == nil {
+		return
+	}
+	Error(err.Error())
+}
+
 func Error(message string) {
 	if err := ErrorWithOptions(context.Background(), message, "", ""); err != nil {
 		fmt.Println(err)
@@ -99,6 +106,13 @@ func FatalWithOptions(ctx context.Context, message, stackTrace, processId string
 		StackTrace: stackTrace,
 		ProcessId:  processId,
 	})
+}
+
+func FatalSafe(err error) {
+	if err == nil {
+		return
+	}
+	Fatal(err.Error())
 }
 
 func FatalFormat(format string, a ...any) {
