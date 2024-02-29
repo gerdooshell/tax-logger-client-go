@@ -61,35 +61,34 @@ func (az *azureSecretService) connectToVault() (err error) {
 	return nil
 }
 
-func (az *azureSecretService) GetSecretValue(ctx context.Context, secretKey string) (<-chan string, <-chan error) {
-	out := make(chan string, 1)
-	errChan := make(chan error, 1)
+func (az *azureSecretService) GetSecretValue(ctx context.Context, secretKey string) <-chan secretService.SecretOut {
+	outChan := make(chan secretService.SecretOut, 1)
 	go func() {
-		defer close(errChan)
-		defer close(out)
+		defer close(outChan)
+		out := secretService.SecretOut{}
+		defer func() { outChan <- out }()
 		cachedValue, err := az.cache.Read(secretKey)
 		if err == nil {
-			out <- cachedValue.(string)
+			out.Value = cachedValue.(string)
 			return
 		}
 		if err = az.connectToVault(); err != nil {
-			errChan <- err
+			out.Err = err
 			return
 		}
 		version := ""
 		resp, err := az.client.GetSecret(ctx, secretKey, version, nil)
 		if err != nil {
-			errChan <- err
+			out.Err = err
 			return
 		}
 		value := resp.Value
 		if value == nil {
-			errChan <- fmt.Errorf("secret key not found")
+			out.Err = fmt.Errorf("secret key not found")
 			return
 		}
 		az.cache.Add(secretKey, *value)
-		out <- *value
+		out.Value = *value
 	}()
-
-	return out, errChan
+	return outChan
 }
