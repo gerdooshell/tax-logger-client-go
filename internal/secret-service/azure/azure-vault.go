@@ -69,6 +69,7 @@ func (az *azureSecretService) GetSecretValue(ctx context.Context, secretKey stri
 		defer close(errChan)
 		cachedValue, err := az.cache.Read(secretKey)
 		if err == nil {
+			fmt.Println("cached value:", cachedValue.(string))
 			out <- cachedValue.(string)
 			return
 		}
@@ -91,6 +92,7 @@ func (az *azureSecretService) GetSecretValue(ctx context.Context, secretKey stri
 			return
 		}
 		az.cache.Add(secretKey, *value)
+		fmt.Println("fetched value:", *value)
 		out <- *value
 	}()
 
