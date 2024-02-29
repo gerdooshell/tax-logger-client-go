@@ -73,17 +73,20 @@ func (az *azureSecretService) GetSecretValue(ctx context.Context, secretKey stri
 			return
 		}
 		if err = az.connectToVault(); err != nil {
+			fmt.Println("step 1:", err, secretKey)
 			errChan <- err
 			return
 		}
 		version := ""
 		resp, err := az.client.GetSecret(ctx, secretKey, version, nil)
 		if err != nil {
+			fmt.Println("step 2:", err, secretKey)
 			errChan <- err
 			return
 		}
 		value := resp.Value
 		if value == nil {
+			fmt.Println("step 3:", fmt.Errorf("secret key not found"), secretKey)
 			errChan <- fmt.Errorf("secret key not found")
 			return
 		}
