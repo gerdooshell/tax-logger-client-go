@@ -92,37 +92,45 @@ func getLoggerConfigModel(ctx context.Context, absFilePath string, env environme
 }
 
 func setVaultSecrets(ctx context.Context, conf loggerConfigModel, env environment.Environment) (loggerConfigModel, error) {
-	timeout := time.Second * 5
+	timeout := time.Second * 15
 	azVault := azure.NewSecretService(conf.VaultURL, env)
-	LoggerUrl, errLoggerUrl := azVault.GetSecretValue(ctx, conf.LoggerUrl)
-	APIKey, errAPIKey := azVault.GetSecretValue(ctx, conf.APIKey)
-	ServiceName, errServiceName := azVault.GetSecretValue(ctx, conf.ServiceName)
-	port, errPort := azVault.GetSecretValue(ctx, conf.Port)
+	loggerUrlChan := azVault.GetSecretValue(ctx, conf.LoggerUrl)
+	apiKeyChan := azVault.GetSecretValue(ctx, conf.APIKey)
+	ServiceNameChan := azVault.GetSecretValue(ctx, conf.ServiceName)
+	portChan := azVault.GetSecretValue(ctx, conf.Port)
 	select {
-	case conf.LoggerUrl = <-LoggerUrl:
-	case err := <-errLoggerUrl:
-		return conf, err
+	case secretOut := <-loggerUrlChan:
+		if secretOut.Err != nil {
+			return conf, secretOut.Err
+		}
+		conf.LoggerUrl = secretOut.Value
 	case <-time.After(timeout):
 		return conf, errors.New("fetching logger url secret timed out")
 	}
 	select {
-	case conf.APIKey = <-APIKey:
-	case err := <-errAPIKey:
-		return conf, err
+	case secretOut := <-apiKeyChan:
+		if secretOut.Err != nil {
+			return conf, secretOut.Err
+		}
+		conf.APIKey = secretOut.Value
 	case <-time.After(timeout):
 		return conf, errors.New("fetching logger api key timed out")
 	}
 	select {
-	case conf.ServiceName = <-ServiceName:
-	case err := <-errServiceName:
-		return conf, err
+	case secretOut := <-ServiceNameChan:
+		if secretOut.Err != nil {
+			return conf, secretOut.Err
+		}
+		conf.ServiceName = secretOut.Value
 	case <-time.After(timeout):
 		return conf, errors.New("fetching logger service name timed out")
 	}
 	select {
-	case conf.Port = <-port:
-	case err := <-errPort:
-		return conf, err
+	case secretOut := <-portChan:
+		if secretOut.Err != nil {
+			return conf, secretOut.Err
+		}
+		conf.Port = secretOut.Value
 	case <-time.After(timeout):
 		return conf, errors.New("fetching logger port secret timed out")
 	}

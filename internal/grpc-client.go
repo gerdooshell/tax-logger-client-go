@@ -4,12 +4,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"sync"
+	"time"
+
 	loggerServer "github.com/gerdooshell/tax-communication/src/logger"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
-	"sync"
-	"time"
 )
 
 type LoggerClient struct {
@@ -30,7 +32,10 @@ func GetClientLoggerInstance() (*LoggerClient, error) {
 	loggerClientInstance = &LoggerClient{
 		config: config,
 	}
-	err = loggerClientInstance.generateDataServiceClient()
+	if err = loggerClientInstance.generateDataServiceClient(); err != nil {
+		return loggerClientInstance, err
+	}
+	_, err = loggerClientInstance.grpcClient.Ping(context.Background(), &emptypb.Empty{})
 	return loggerClientInstance, err
 }
 

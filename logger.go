@@ -16,7 +16,12 @@ func SetUpLogger(ctx context.Context, envStr, configFileAbsPath string) (err err
 	if err = internal.ConfigureLoggerByFilePath(ctx, env, configFileAbsPath); err != nil {
 		return err
 	}
-	_, err = internal.GetClientLoggerInstance()
+	if _, err = internal.GetClientLoggerInstance(); err != nil {
+		err = fmt.Errorf("failed establishing connection to the logging service: %v", err)
+	}
+	if err == nil {
+		fmt.Println("logger is initialized and the logging service is responding")
+	}
 	return err
 }
 
@@ -36,7 +41,14 @@ func ErrorWithOptions(ctx context.Context, message, stackTrace, processId string
 }
 
 func ErrorFormat(format string, a ...any) {
-	Error(fmt.Sprintf(format, a))
+	Error(fmt.Sprintf(format, a...))
+}
+
+func ErrorSafe(err error) {
+	if err == nil {
+		return
+	}
+	Error(err.Error())
 }
 
 func Error(message string) {
@@ -57,7 +69,7 @@ func WarningWithOptions(ctx context.Context, message, stackTrace, processId stri
 }
 
 func WarningFormat(format string, a ...any) {
-	Warning(fmt.Sprintf(format, a))
+	Warning(fmt.Sprintf(format, a...))
 }
 
 func Warning(message string) {
@@ -78,7 +90,7 @@ func InfoWithOptions(ctx context.Context, message, stackTrace, processId string)
 }
 
 func InfoFormat(format string, a ...any) {
-	Info(fmt.Sprintf(format, a))
+	Info(fmt.Sprintf(format, a...))
 }
 
 func Info(message string) {
@@ -98,8 +110,15 @@ func FatalWithOptions(ctx context.Context, message, stackTrace, processId string
 	})
 }
 
+func FatalSafe(err error) {
+	if err == nil {
+		return
+	}
+	Fatal(err.Error())
+}
+
 func FatalFormat(format string, a ...any) {
-	Fatal(fmt.Sprintf(format, a))
+	Fatal(fmt.Sprintf(format, a...))
 }
 
 func Fatal(message string) {
@@ -120,7 +139,7 @@ func DebugWithOptions(ctx context.Context, message, stackTrace, processId string
 }
 
 func DebugFormat(format string, a ...any) {
-	Debug(fmt.Sprintf(format, a))
+	Debug(fmt.Sprintf(format, a...))
 }
 
 func Debug(message string) {
